@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { addTodo } from '../redux/todoSlice';
+import { useSelector } from 'react-redux';
+import { addTodo, changeEdit } from '../redux/todoSlice';
 
 const AddTodoForm = () => {
+	const dispatch = useDispatch();
 	const [value, setValue] = useState('');
 
-	const dispatch = useDispatch();
+	const editId = useSelector(state => state.todoList.editId);
+	const id = undefined ? 123 : editId;
+
+	// const isEdit = useSelector(state => state.todoList.isEdit);
+	const todoObject = useSelector(state => state.todoList.list.find(todo => todo.id === id));
+
+	console.log(todoObject, 'todoform')
+	const title = todoObject.id;
+	// setValue(title);
+
 	const onSubmit = (event) => {
 		event.preventDefault();
 		// console.log('user entered: ' + value);

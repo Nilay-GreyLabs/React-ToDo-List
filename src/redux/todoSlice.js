@@ -1,13 +1,15 @@
 import { clippingParents } from "@popperjs/core";
 import { createSlice } from "@reduxjs/toolkit";
+import { act } from "react-dom/test-utils";
 
 const todoSlice = createSlice({
     name: 'todoList',
 
     initialState: {
         list: [],
-        // string: true,
         modified: [],
+        isEdit: false,
+        editId: 0,
     },
     // initialState: [],
     reducers: {
@@ -28,7 +30,16 @@ const todoSlice = createSlice({
             state.list[index].completed = action.payload.completed;
         },
         deleteTodo: (state, action) => {
-            return state.list.filter(todo => todo.id !== action.payload.id);
+          const newList = state.list.filter(todo => todo.id !== action.payload.id);
+          state.list = newList;
+        },
+        editTodo : (state, action) => {
+            const id = action.payload.id;
+            state.editId = id;
+            state.isEdit = !state.isEdit;
+        },
+        changeEdit : (state, action) => {
+            state.isEdit = !state.isEdit;
         },
         searchTodo: (state, action) => {
             const newList = state.list.filter(todo => todo.title.includes(action.payload.title));
@@ -40,5 +51,5 @@ const todoSlice = createSlice({
     }
 });
  
-export const {addTodo, toggleComplete, deleteTodo, searchTodo}  = todoSlice.actions;
+export const {addTodo, toggleComplete, deleteTodo, searchTodo, editTodo, changeEdit}  = todoSlice.actions;
 export default todoSlice.reducer;

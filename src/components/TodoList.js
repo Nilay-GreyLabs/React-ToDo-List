@@ -6,7 +6,7 @@ const TodoList = () => {
   const todos = useSelector(state => state.todoList.list);
   const searched = useSelector(state => state.todoList.modified);
 
-  console.log(searched.length);
+  // console.log(searched.length);
   // const todos = [
   // 	{ id: 1, title: 'todo1', completed: false },
   // 	{ id: 2, title: 'todo2', completed: false },
