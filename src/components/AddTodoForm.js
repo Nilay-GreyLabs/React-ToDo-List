@@ -1,49 +1,73 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { addTodo, changeEdit } from '../redux/todoSlice';
+import { addTodo, updateTodo } from '../redux/todoSlice';
 
 const AddTodoForm = () => {
-	const dispatch = useDispatch();
-	const [value, setValue] = useState('');
+  const dispatch = useDispatch();
+  const [value, setValue] = useState('');
 
-	const editId = useSelector(state => state.todoList.editId);
-	const id = undefined ? 123 : editId;
+  const todoID = useSelector(state => state.todoList.todoID);
+  const id = (todoID === undefined || '' || null )? 123 : todoID;
+  const isEditable = useSelector(state => state.todoList.isEdit);
+	//   console.log(isEditable);
 
-	// const isEdit = useSelector(state => state.todoList.isEdit);
-	const todoObject = useSelector(state => state.todoList.list.find(todo => todo.id === id));
+  let todoObject = useSelector(state => state.todoList.list.find(todo => todo.id === id));
+  if (todoObject) {
+	//   setValue(todoObject.title);
+  }
+//   setvalue error - during update, it submits as well
 
-	console.log(todoObject, 'todoform')
-	const title = todoObject.id;
-	// setValue(title);
-
-	const onSubmit = (event) => {
-		event.preventDefault();
-		// console.log('user entered: ' + value);
+  const onSubmit = event => {
+	console.log("submitted......");
+    event.preventDefault();
+    // console.log('user entered: ' + value);
+    if(!value){
+		alert('empty input');
+	}else{
 		dispatch(
 			addTodo({
-				title: value,
+			  title: value,
 			})
-		);
-		setValue('');
-	};
+		  );
+	}
+    setValue('');
+  };
 
-	return (
-		<form onSubmit={onSubmit} className='form-inline mt-3 mb-3'>
-			<label className='sr-only'>Name</label>
-			<input
-				type='text'
-				className='form-control mb-2 mr-sm-2'
-				placeholder='Add todo...'
-				value={value}
-				onChange={(event) => setValue(event.target.value)}
-			></input>
+  const handleUpdate = () => {
+    dispatch(
+      updateTodo({
+        id: id,
+		title: value,
+      }),
+    );
+	todoObject = null;
+};
 
-			<button type='submit' className='btn btn-primary mb-2'>
-				Submit
-			</button>
-		</form>
-	);
+// console.log(isEditable, "is editable");
+  return (
+    <form onSubmit={onSubmit} className="form-inline mt-3 mb-3">
+      <label className="sr-only">Name</label>
+      <input
+        type="text"
+        className="form-control mb-2 mr-sm-2"
+        placeholder="Add todo..."
+        value={value}
+		autoFocus={isEditable}
+        onChange={event => setValue(event.target.value)}
+      ></input>
+
+      {isEditable ? (
+        <button type="button" onClick={handleUpdate} className="btn btn-success mb-2">
+          Update
+        </button>
+      ) : (
+        <button type="submit" className="btn btn-primary mb-2">
+          Submit
+        </button>
+      )}
+    </form>
+  );
 };
 
 export default AddTodoForm;

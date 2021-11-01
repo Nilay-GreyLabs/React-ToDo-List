@@ -22,14 +22,14 @@ const TodoItem = ({ id, title, completed }) => {
 		dispatch(editTodo({
 			id: id,
 		}));
-		console.log(id, 'todoList')
+		// console.log(id, 'todoList')
 	}
 
 	return (
 		<li className={`list-group-item ${completed && 'list-group-item-success'}`}>
 			<div className='d-flex justify-content-between' >
 				<span className='d-flex align-items-center' onClick={handleToggle}>
-					<input type='checkbox' className='mr-3' checked={completed} ></input>
+					<input type='checkbox' className='mr-3' checked={completed} onChange={handleToggle}></input>
 					{title}
 				</span>
 				<button className='btn btn-info' onClick={handleEdit}>Edit</button>

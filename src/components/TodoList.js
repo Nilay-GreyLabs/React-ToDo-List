@@ -15,7 +15,7 @@ const TodoList = () => {
 
   return (
     <ul className="list-group">
-       {searched.length != 0
+       {searched.length !== 0
         ? searched.map((todo, index) => <TodoItem key={index} id={todo.id} title={todo.title} completed={todo.completed} />)
         : todos.map((todo, index) => <TodoItem key={index} id={todo.id} title={todo.title} completed={todo.completed} />)}
       

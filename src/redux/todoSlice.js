@@ -1,6 +1,5 @@
 import { clippingParents } from "@popperjs/core";
 import { createSlice } from "@reduxjs/toolkit";
-import { act } from "react-dom/test-utils";
 
 const todoSlice = createSlice({
     name: 'todoList',
@@ -9,7 +8,7 @@ const todoSlice = createSlice({
         list: [],
         modified: [],
         isEdit: false,
-        editId: 0,
+        todoID: 0,
     },
     // initialState: [],
     reducers: {
@@ -21,6 +20,22 @@ const todoSlice = createSlice({
             };
             // state.push(newTodo);
             state.list.push(newTodo);
+        },
+        updateTodo: (state, action) => {
+            const id  = action.payload.id;
+            const value = action.payload.title;
+            // state.list.map(itm => {
+            //     if (itm.id === id){
+            //         itm.title = value;
+            //     }
+            //     // return [...state.list, itm];
+            //     return itm;
+            // });
+            const index = state.list.findIndex(itm => itm.id === id);
+            state.list[index].title = value;
+
+            state.isEdit = false;
+            state.list.forEach(itm => console.log(itm.id));
         },
         toggleComplete: (state, action) => {
             const index = state.list.findIndex(
@@ -35,11 +50,8 @@ const todoSlice = createSlice({
         },
         editTodo : (state, action) => {
             const id = action.payload.id;
-            state.editId = id;
-            state.isEdit = !state.isEdit;
-        },
-        changeEdit : (state, action) => {
-            state.isEdit = !state.isEdit;
+            state.todoID = id;
+            state.isEdit = true;
         },
         searchTodo: (state, action) => {
             const newList = state.list.filter(todo => todo.title.includes(action.payload.title));
@@ -51,5 +63,5 @@ const todoSlice = createSlice({
     }
 });
  
-export const {addTodo, toggleComplete, deleteTodo, searchTodo, editTodo, changeEdit}  = todoSlice.actions;
+export const {addTodo, toggleComplete, deleteTodo, searchTodo, editTodo, updateTodo}  = todoSlice.actions;
 export default todoSlice.reducer;
