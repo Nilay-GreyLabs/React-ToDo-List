@@ -1,0 +1,54 @@
+*{
+	margin: 0;
+	font-family: monospace;
+}
+body {
+	background-color: lightblue !important;
+}
+ul {
+	list-style: none;
+	position: absolute;
+	width: 80%;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: rgb(194, 112, 112);
+	padding: 20px;
+	border-radius: 10px;
+}
+  ul li {
+	padding: 5px;
+	margin-bottom: 10px;
+	background: #fff;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+  }
+  
+  ul li button {
+	border: 2px solid #ddd;
+	background: #ddd;
+	cursor: pointer;
+	margin-left: 4px;
+  }
+  
+  ul > form {
+	margin: 50px auto 0;
+  }
+  
+  ul > form input[type="text"] {
+	height: 34px;
+	padding: 10px;
+	border: none;
+	font-size: 1rem;
+	font-family: monospace;
+  }
+  
+  ul > form input[type="submit"] {
+	min-width: 100px;
+	padding: 8px;
+	border: none;
+	background: #333;
+	color: #ddd;
+	font-size: 0.8rem;
+  }
