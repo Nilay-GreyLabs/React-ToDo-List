@@ -78,8 +78,8 @@ class SongList extends Component {
   };
 
   handleCancel = (i) => {
-    this.props.cancelEdit(i);
     this.setState({currentValue: ''});
+    this.props.cancelEdit(i);
   }
 
   handleCopy = (title) => {
