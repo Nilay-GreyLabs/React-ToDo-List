@@ -7,7 +7,7 @@ class Form extends Component {
     render() {
         return (
             <form onSubmit={this.props.onSubmit}>
-                <input type="text" name="newSong" value={this.props.value} autoFocus={true} onChange={this.props.onChange} />
+                <input type="text" name="newSong" value={this.props.value} autoFocus={this.props.autoFocus} onChange={this.props.onChange} />
                 <input type="submit" name="addSong" value="Add" />
             </form>
         )

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SongList from "./components/SongList";
-import Input from "./components/Input";
+// import Input from "./components/Input";
 
 class App extends Component {
 	constructor(props) {

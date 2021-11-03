@@ -1,15 +1,18 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import { Dispatch } from 'react';
 
 // components
 import Form from "../components/Form";
+import Preview from "../components/Preview";
 
 // actions
-import { addSong, removeSong, updateSong, editSong, cancelEdit } from '../actions/songActions';
+import { addSong, removeSong, updateSong, editSong, cancelEdit, copyContent} from '../actions/songActions';
 
 //alert module
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { CANCEL_EDIT } from '../actions/types';
 
 const MySwal = withReactContent(Swal);
 
@@ -19,6 +22,11 @@ class SongList extends Component {
     this.state = {
       newSong: '',
       currentValue: '',
+      display: false,
+      style: {
+        color: 'white',
+        wordBreak: 'break-all',
+      }
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -42,7 +50,7 @@ class SongList extends Component {
       this.props.addSong(newSongToAdd);
     } else {
       MySwal.fire({
-        title: '<p>Fields is empty!</p>',
+        title: '<p>todo Field is empty!</p>',
         icon: 'error',
       });
     }
@@ -59,17 +67,23 @@ class SongList extends Component {
     // console.log(index, "title: ",title, "currentValue",this.state.currentValue)
     this.props.editSong(index);
     this.setState({ currentValue: title });
+    this.setState({ display: true });
   };
 
   handleUpdate = i => {
-
     const updatedValue = this.state.currentValue;
     this.props.updateSong(i, updatedValue);
-    // this.setState({currentValue: ''});
+    this.setState({currentValue: ''});
+    this.setState({display: false});
   };
 
   handleCancel = (i) => {
     this.props.cancelEdit(i);
+    this.setState({currentValue: ''});
+  }
+
+  handleCopy = (title) => {
+    this.props.copyContent(title);
   }
 
   render() {
@@ -80,20 +94,21 @@ class SongList extends Component {
           return (
             <Fragment key={i}>
 
-              {!song.editing ? 
+              {!song.editing ?
               (
                 <li>
                     {song.title}
                     <span>
                         <button onClick={() => { this.handleRemove(i)}}> remove </button>
                         <button onClick={() => { this.handleEdit(i, song.title)}}> edit </button>
+                        <button onClick={() => { this.handleCopy(song.title)}}> copy </button>
                     </span>
                 </li>
               ) : (
                 <li>
-                    {song.title}
-                    <form onSubmit={this.handleUpdate}>
-                        <input type="text" value={this.state.currentValue} name="currentValue" onChange={this.handleChange} />
+                    {/* {song.title} */}
+                    <form onSubmit={this.handleUpdate, (e)=>{e.preventDefault()}}>
+                        <input type="text" autoFocus={this.state.display} value={this.state.currentValue} name="currentValue" onChange={this.handleChange} />
                     </form>
                     <span>
                         <button onClick={() => { this.handleCancel(i)}}> cancel </button>
@@ -105,7 +120,9 @@ class SongList extends Component {
             </Fragment>
           );
         })}
-        <Form onSubmit={this.handleSubmit} onChange={this.handleChange} value={this.state.newSong}/>
+
+        <Preview text={this.state.currentValue} style={this.state.style} />
+        <Form onSubmit={this.handleSubmit} onChange={this.handleChange} value={this.state.newSong} autoFocus={!this.state.display} />
         
       </ul>
     );
@@ -126,10 +143,17 @@ const mapStateToProps = state => ({
 
 // mapDispatchToProps : the action we need in our component to dispatch them and change our state
 
-// const mapDispatchToProps = {
-//     {addSong}
-// } //or just destructure actions as done already
+const mapDispatchToProps = {
+  addSong,
+  removeSong, 
+  editSong, 
+  cancelEdit, 
+  updateSong,
+  copyContent
+}; //or just destructure actions as done already
 
 //in case we don't have any actions then instead of mapDispatchToProps, null should be passed
 
-export default connect(mapStateToProps, { addSong, removeSong, editSong, updateSong, cancelEdit})(SongList);
+export default connect(mapStateToProps, mapDispatchToProps)(SongList);
+
+// export default connect(mapStateToProps, { addSong, removeSong, editSong, updateSong, cancelEdit, copyContent})(SongList); //alternate way using obj destructuring

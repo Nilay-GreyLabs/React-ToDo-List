@@ -4,6 +4,7 @@ import {
     UPDATE_SONG, 
     EDIT_SONG,
     CANCEL_EDIT,
+    COPY_CONTENT,
 } from './types';
 
 export const addSong = song => {
@@ -40,3 +41,15 @@ export const cancelEdit = (index) => {
         payload: index,
     }
 }
+export const copyContent = title => {
+    return{
+        type: COPY_CONTENT,
+        title,
+        // payload: title,
+        // payload: {title},
+    }
+}
+//in reducer
+// action.title 
+// action.payload 
+// action.payload.title 

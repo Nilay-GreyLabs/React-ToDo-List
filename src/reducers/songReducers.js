@@ -2,17 +2,21 @@
 
 import { bindActionCreators } from "redux"
 import { defaultEqualityCheck } from "reselect"
-import {ADD_SONG, CANCEL_EDIT, EDIT_SONG, REMOVE_SONG, UPDATE_SONG} from "../actions/types";
+import {ADD_SONG, CANCEL_EDIT, EDIT_SONG, REMOVE_SONG, UPDATE_SONG, COPY_CONTENT} from "../actions/types";
 // in the switch statement we will listen for an action
 
 const initialState = {
     songs: [
         {
-            title: "654646464.",
+            title: "123",
             editing: false,
         },
         {
-            title: "React-REdux application",
+            title: "React-Redux",
+            editing: false,
+        },
+        {
+            title: "class based components",
             editing: false,
         },
     ],
@@ -52,9 +56,17 @@ export default (state = initialState, action) => {
         case CANCEL_EDIT:
             const l = action.payload;
             return{
-                songs: state.songs.map((song, i) => i === l ? {...song, editing: false} : {...song, editing: true}),
+                songs: state.songs.map((song, i) => i === l ? {...song, editing: false} : song),
             }
-            
+        case COPY_CONTENT:
+            const theClipboard = window.navigator.clipboard;
+            const copied = theClipboard.writeText(action.title)
+            .then(alert(`copied! ${action.title}`));
+            // .then is not mandatory
+
+            return{
+                songs: state.songs,
+            }
         default:
             return state;
     }

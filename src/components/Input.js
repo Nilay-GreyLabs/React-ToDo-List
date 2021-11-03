@@ -11,7 +11,7 @@ class Input extends Component {
 
   handleChange = e => {
     const name = e.target.name;
-    this.setState({ name: e.target.value });
+    this.setState({ [name]: e.target.value });
   };
   render() {
     return (
