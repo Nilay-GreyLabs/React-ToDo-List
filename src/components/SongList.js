@@ -12,7 +12,6 @@ import { addSong, removeSong, updateSong, editSong, cancelEdit, copyContent} fro
 //alert module
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { CANCEL_EDIT } from '../actions/types';
 
 const MySwal = withReactContent(Swal);
 
@@ -54,6 +53,7 @@ class SongList extends Component {
         icon: 'error',
       });
     }
+    
     // MySwal.fire('hello');
     this.setState({ newSong: '' });
   };

@@ -1,7 +1,7 @@
 // we set our initial state and pass it in our reducer function 
 
-import { bindActionCreators } from "redux"
-import { defaultEqualityCheck } from "reselect"
+// import { bindActionCreators } from "redux"
+// import { defaultEqualityCheck } from "reselect"
 import {ADD_SONG, CANCEL_EDIT, EDIT_SONG, REMOVE_SONG, UPDATE_SONG, COPY_CONTENT} from "../actions/types";
 // in the switch statement we will listen for an action
 
@@ -21,7 +21,7 @@ const initialState = {
         },
     ],
 }
-
+ 
 export default (state = initialState, action) => {
     switch (action.type){
         case ADD_SONG:
@@ -49,7 +49,7 @@ export default (state = initialState, action) => {
             // j is declared above for editing ele.
             const k = action.payload.index;
             const title = action.payload.title;
-            return{
+            return {
                 songs: state.songs.map((song, index) =>  index === k ? {...song, title: title, editing: false} : song),
             }
         
