@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import api from '../api/contactsApi';
 import { Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
 // import ContactRoutes from '../routes/ContactRoute';
@@ -16,6 +17,29 @@ class Contact extends Component {
       list: [],
     };
   }
+
+  retrievedContacts = async () => {
+    const response = await api.get("/contacts");
+    if (response.data){
+      console.log('got the data')
+      this.setState({list: response.data})
+    }
+    // return response.data;
+  }
+
+  componentDidMount = () => {
+    this.retrievedContacts();
+  }
+
+  // setting up retrieved data in list
+  // componentDidMount = () => {
+  //   const getAllData = async () => {
+  //     // this.setState({list: await this.retrievedContacts()})
+  //     const allData = await this.retrievedContacts();
+  //     if (allData) this.setState({list: allData});
+  //   }
+  //   getAllData();
+  // }
 
   handleChange = e => {
     let value = e.target.value;
