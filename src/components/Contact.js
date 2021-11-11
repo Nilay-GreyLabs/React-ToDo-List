@@ -3,8 +3,9 @@ import { Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
 // import ContactRoutes from '../routes/ContactRoute';
 
-import Form from '../components/Form';
-import ContactList from '../components/ContactList';
+import Form from './Form';
+import ContactList from './ContactList';
+import Preview from './preview';
 
 class Contact extends Component {
   constructor(props) {
@@ -12,10 +13,7 @@ class Contact extends Component {
     this.state = {
       name: '',
       email: '',
-      list: [
-        { name: 'Nilay', email: 'adf@gad.com' },
-        { name: 'NIlay', email: 'adf@gad.com' },
-      ],
+      list: [],
     };
   }
 
@@ -28,32 +26,63 @@ class Contact extends Component {
     });
   };
 
+  // for unique id
+  date = () => {
+    let d = Date.now();
+    let r = Math.random() * 1000;
+    let num = Math.floor(r);
+
+    return num + d;
+  };
   addItem = () => {
     const itm = {
       name: this.state.name,
       email: this.state.email,
+      id: this.date(),
     };
-    // this.state.list.push(itm); //returns num of ele after push
+    // this.state.list.push(itm); //returns length after push
     // this.setState({
     //     list: this.state.list.concat(itm),
     // });
+
+    // if no name then add default
+    if (!itm.name) {
+      itm.name = `user ${this.state.list.length + 1}`;
+    }
+
     this.setState({
       list: [...this.state.list, itm],
       name: '',
       email: '',
     });
-
+    console.log(itm);
     this.props.history.push('/contacts');
   };
+
+  // local storage
+  // after redering local data will be assigned to list
+  // componentDidMount = () => {
+  //   const retrieve = JSON.parse(localStorage.getItem(this.local_key));
+  //   if (retrieve) this.setState({ ...this.state, list: retrieve });
+  // };
+
+  // local_key = 'CONTACTS';
+  // componentDidUpdate = () => {
+  //   localStorage.setItem(this.local_key, JSON.stringify(this.state.list));
+  // };
 
   render() {
     return (
       <React.Fragment>
         <Switch>
-          <Route path="/contacts" exact component={props => <ContactList {...props} list={this.state.} />} />
+          <Route path="/contacts" exact component={props => <ContactList {...props} list={this.state.list} />} />
 
           <Route path="/contacts/addcontact" exact>
             <Form handleChange={this.handleChange} addItem={this.addItem} name={this.state.name} email={this.state.email} />
+          </Route>
+
+          <Route path={`/contacts/`}>
+            <Preview />
           </Route>
         </Switch>
       </React.Fragment>

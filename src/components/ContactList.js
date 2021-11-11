@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import List from './List';
+import Card from './Card';
 import {Link} from 'react-router-dom'; 
 
 class ContactList extends Component {
@@ -12,7 +12,7 @@ class ContactList extends Component {
       <>
         <h2>List</h2>
         {list.map((itm, i) => (
-          <List key={i} name={itm.name} email={itm.email} />
+          <Card key={i} name={itm.name} email={itm.email} id={itm.id}/>
         ))}
 
         <Link to="/contacts/addcontact">
