@@ -15,21 +15,23 @@ class Contact extends Component {
       name: '',
       email: '',
       list: [],
+      isLoading: true,
     };
   }
 
   retrievedContacts = async () => {
-    const response = await api.get("/contacts");
-    if (response.data){
-      console.log('got the data')
-      this.setState({list: response.data})
+    const response = await api.get('/contacts');
+    if (response.data) {
+      console.log('got the data');
+      this.setState({ list: response.data });
+      this.setState({ isLoading: false });
     }
     // return response.data;
-  }
+  };
 
   componentDidMount = () => {
     this.retrievedContacts();
-  }
+  };
 
   // setting up retrieved data in list
   // componentDidMount = () => {
@@ -58,7 +60,8 @@ class Contact extends Component {
 
     return num + d;
   };
-  addItem = () => {
+
+  addItem = async () => {
     const itm = {
       name: this.state.name,
       email: this.state.email,
@@ -74,8 +77,12 @@ class Contact extends Component {
       itm.name = `user ${this.state.list.length + 1}`;
     }
 
+    // api.post('/contacts', itm); //it adds data directly
+    const response = await api.post('/contacts', itm);
+
     this.setState({
-      list: [...this.state.list, itm],
+      // list: [...this.state.list, itm],
+      list: [...this.state.list, response.data],
       name: '',
       email: '',
     });
@@ -83,7 +90,28 @@ class Contact extends Component {
     this.props.history.push('/contacts');
   };
 
-  // local storage
+  // removing item
+  removeItem = async ({ id }) => {
+    // console.log('dele', id)
+    await api.delete(`/contacts/${id}`);
+    const newList = this.state.list.filter(itm => {
+      return itm.id !== id;
+    });
+
+    this.setState({ list: newList });
+  };
+
+  // updating
+  updateItem = ({id}) => {
+    console.log('update', id)
+    // const obj = this.state.list.find(itm => itm.id === id);
+    // this.history.push('/contacts/update');
+  }
+
+
+
+
+  //add data in local storage
   // after redering local data will be assigned to list
   // componentDidMount = () => {
   //   const retrieve = JSON.parse(localStorage.getItem(this.local_key));
@@ -96,19 +124,38 @@ class Contact extends Component {
   // };
 
   render() {
+
+    this.removeItem = this.removeItem.bind(this)
+    this.updateItem = this.updateItem.bind(this)
+    this.retrievedContacts = this.retrievedContacts.bind(this)
+    this.addItem = this.addItem.bind(this)
+
+
+
     return (
       <React.Fragment>
-        <Switch>
-          <Route path="/contacts" exact component={props => <ContactList {...props} list={this.state.list} />} />
+        {/* {this.state.isLoading && <h1>Loading...</h1>}
+        {this.state.isLoading === false && <h3>data loaded!</h3>} */}
 
-          <Route path="/contacts/addcontact" exact>
-            <Form handleChange={this.handleChange} addItem={this.addItem} name={this.state.name} email={this.state.email} />
-          </Route>
+        {this.state.isLoading ? (
+          <h3>Loading.....</h3>
+        ) : (
+          <Switch>
+            <Route
+              path="/contacts"
+              exact
+              component={props => <ContactList {...props} list={this.state.list} 
+              handleDelete={this.removeItem} 
+              handleUpadate={this.updateItem}/>}
+            />
 
-          <Route path={`/contacts/`}>
-            <Preview />
-          </Route>
-        </Switch>
+            <Route path="/contacts/addcontact" exact>
+              <Form handleChange={this.handleChange} addItem={this.addItem} name={this.state.name} email={this.state.email} btnName='Save'/>
+            </Route>
+
+            <Route path="/contacts/" component={Preview} />
+          </Switch>
+        )}
       </React.Fragment>
     );
   }

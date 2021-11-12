@@ -5,6 +5,7 @@ class Preview extends Component{
         super(props)
     }
     render(){
+        console.log(this.props);
         const {name, email} = this.props.location.state.contact;
         return <div className='preview-card'>
             <div>{name}</div>

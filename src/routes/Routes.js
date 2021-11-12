@@ -17,7 +17,7 @@ const Routes = () => {
       {/* if component has sub routing then their should be like this */}
       <Route path="/contacts" component={Contact} exact/> 
       <Route path="/contacts/addcontact" component={Contact} exact/>
-      <Route path="/contacts/*" component={Preview} exact/>
+      <Route path="/contacts/*" component={Contact} exact/>
     </Switch>
   </>;
 };
