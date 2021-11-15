@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import api from '../api/contactsApi';
+import api from '../api/contactsApi'; //req. for api call
 import { Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
 // import ContactRoutes from '../routes/ContactRoute';
@@ -16,6 +16,9 @@ class Contact extends Component {
       email: '',
       list: [],
       isLoading: true,
+      currName: '',
+      currEmail: '',
+      currId: '',
     };
   }
 
@@ -63,10 +66,12 @@ class Contact extends Component {
 
   addItem = async () => {
     const itm = {
-      name: this.state.name,
-      email: this.state.email,
+      name: this.state.name[0],
+      email: this.state.email[0],
       id: this.date(),
     };
+    console.log(this.state.name)
+
     // this.state.list.push(itm); //returns length after push
     // this.setState({
     //     list: this.state.list.concat(itm),
@@ -87,6 +92,8 @@ class Contact extends Component {
       email: '',
     });
     console.log(itm);
+    console.log('type of currEmail :', typeof(this.state.email) );
+    console.log('type of currEmail :', typeof(this.state.name) );
     this.props.history.push('/contacts');
   };
 
@@ -98,17 +105,38 @@ class Contact extends Component {
       return itm.id !== id;
     });
 
+    console.log(id);
     this.setState({ list: newList });
   };
 
   // updating
   updateItem = ({id}) => {
-    console.log('update', id)
-    // const obj = this.state.list.find(itm => itm.id === id);
-    // this.history.push('/contacts/update');
+    const obj = this.state.list.find(itm => itm.id === id);
+    this.props.history.push(`/contacts/edit/${id}`);
+    console.log('update obj::::::', obj);
+
+    this.setState({
+      currEmail: obj.email,
+      currName: obj.name,
+      currId: obj.id,
+    });
+
+    console.log('type of currEmail :', typeof(this.state.currEmail) );
   }
 
+  updateValue = async () => {
+    const newObj = {
+      name: this.state.currName,
+      email: this.state.currEmail,
+      id: this.state.currId,
+    };
 
+    const response = await api.put(`contacts/${this.state.currId}`, newObj);
+    
+    console.log(response.data);
+    this.props.history.push('/contacts/');
+
+  }
 
 
   //add data in local storage
@@ -127,6 +155,7 @@ class Contact extends Component {
 
     this.removeItem = this.removeItem.bind(this)
     this.updateItem = this.updateItem.bind(this)
+    this.updateValue = this.updateValue.bind(this)
     this.retrievedContacts = this.retrievedContacts.bind(this)
     this.addItem = this.addItem.bind(this)
 
@@ -146,14 +175,26 @@ class Contact extends Component {
               exact
               component={props => <ContactList {...props} list={this.state.list} 
               handleDelete={this.removeItem} 
-              handleUpadate={this.updateItem}/>}
+              handleUpdate={this.updateItem}/>}
             />
 
             <Route path="/contacts/addcontact" exact>
-              <Form handleChange={this.handleChange} addItem={this.addItem} name={this.state.name} email={this.state.email} btnName='Save'/>
+              <Form 
+              handleChange={this.handleChange} 
+              addItem={this.addItem} 
+              userName={this.state.name} 
+              userEmail={this.state.email} action='Save'/>
             </Route>
 
-            <Route path="/contacts/" component={Preview} />
+            <Route path="/contacts/details/:id" component={Preview} />
+            
+            <Route path="/contacts/edit/" >
+              <Form 
+              handleChange={this.handleChange} 
+              updateItem={this.updateValue} 
+              currName={this.state.currName} 
+              currEmail={this.state.currEmail} action='update'/>
+            </Route>
           </Switch>
         )}
       </React.Fragment>
