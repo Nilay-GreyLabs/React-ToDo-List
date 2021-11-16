@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import api from '../api/contactsApi'; //req. for api call
+import axios from 'axios'; //simplified -req. for api call
 import { Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
 // import ContactRoutes from '../routes/ContactRoute';
@@ -23,7 +24,8 @@ class Contact extends Component {
   }
 
   retrievedContacts = async () => {
-    const response = await api.get('/contacts');
+    // const response = await api.get('/contacts');
+    const response = await axios.get('http://localhost:3006/contacts');
     if (response.data) {
       console.log('got the data');
       this.setState({ list: response.data });
@@ -132,6 +134,8 @@ class Contact extends Component {
     };
 
     const response = await api.put(`contacts/${this.state.currId}`, newObj);
+    const newList = this.state.list.map(itm => itm.id === this.state.currId ? {...response.data} :  itm);
+    this.setState({list: newList})
     
     console.log(response.data);
     this.props.history.push('/contacts/');
